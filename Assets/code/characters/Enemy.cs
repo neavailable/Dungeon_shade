@@ -6,9 +6,9 @@ public abstract class Enemy : Character
     private bool change_action_when_rest, change_action_when_follow, change_action_when_attack;
     [SerializeField] private float notice_box_width, notice_box_height;
 
-    private float start_time_of_standing, start_time_of_attacking, end_time_of_standing, end_time_of_attacking; 
+    private float start_time_of_standing, end_time_of_standing; 
 
-    [SerializeField] private int left_position_border, right_position_border;
+    [SerializeField] private float left_position_border, right_position_border;
 
     private int standing_probility;
 
@@ -33,7 +33,7 @@ public abstract class Enemy : Character
     {
         change_action_when_rest = true; change_action_when_follow = true; change_action_when_attack = true;
 
-        end_time_of_standing = 1f; end_time_of_attacking = 1.8f;
+        end_time_of_standing = 1f;
 
         standing_probility = 30;
     }
@@ -88,9 +88,9 @@ public abstract class Enemy : Character
         else move();
     }
 
-    private void set_can_change_action(states state, ref bool can_change_action, float start_time, float end_time)
+    private void set_can_change_action(ref bool can_change_action)
     {
-        if (current_state == state && Time.time - start_time > end_time)
+        if (current_state == states.is_standing && Time.time - start_time_of_standing > end_time_of_standing)
         {
             current_state = states.do_nothing;
 
@@ -98,11 +98,18 @@ public abstract class Enemy : Character
         }
     }
 
-    private void stand(float end_time_)
+    private void end_of_attacking()
+    {
+        current_state = states.do_nothing;
+
+        change_action_when_attack = true;
+    }
+
+    private void stand(float end_time_of_standing_)
     {
         start_time_of_standing = Time.time;
         
-        end_time_of_standing = end_time_;
+        end_time_of_standing = end_time_of_standing_;
 
         direction = 0;
 
@@ -126,23 +133,21 @@ public abstract class Enemy : Character
 
     private void attack()
     {
-        start_time_of_attacking = Time.time;
-
         current_state = states.is_attacking; change_action_when_rest = true; change_action_when_follow = true;
         direction = 0;
 
         standing_probility += 30;
     }
 
-    private void generate_action(ref bool can_change_action, int stand_probability, int run_probaility, float end_time, float goal_x)
+    private void generate_action(ref bool can_change_action, int stand_probability, int run_probaility, float end_time_of_standing_, float goal_x)
     {
-        set_can_change_action(states.is_standing, ref can_change_action, start_time_of_standing, end_time_of_standing);
+        set_can_change_action(ref can_change_action);
 
         if (can_change_action)
         {
             int probability = new System.Random().Next(0, 101);
 
-            if (probability >= 0 && probability <= stand_probability) stand(end_time);
+            if (probability >= 0 && probability <= stand_probability) stand(end_time_of_standing_);
 
             else if (probability > stand_probability && probability <= stand_probability + run_probaility) set_pos_as_goal(goal_x, transform.position.y);
             
@@ -154,7 +159,7 @@ public abstract class Enemy : Character
 
     private void do_at_resting_state()
     {
-        generate_action( ref change_action_when_rest, 40, 60, (float) (new System.Random().NextDouble() * (2.5f - 0.5f) + 0.5f), new System.Random().Next(left_position_border, right_position_border) );
+        generate_action(ref change_action_when_rest, 40, 60, (float) (new System.Random().NextDouble() * (2.5f - 0.5f) + 0.5f), (float) (new System.Random().NextDouble() * (right_position_border - left_position_border) + left_position_border));
 
         change_action_when_follow = true; change_action_when_attack = true;
 
@@ -172,8 +177,6 @@ public abstract class Enemy : Character
 
     private void do_at_attack_mode()
     {
-        set_can_change_action(states.is_attacking, ref change_action_when_attack, start_time_of_attacking, end_time_of_attacking);
-
         generate_action(ref change_action_when_attack, standing_probility, 0, (float) (new System.Random().NextDouble() * (1f - 0.5f) + 0.5f), player_transform.position.x);
         
         change_action_when_follow = true;
