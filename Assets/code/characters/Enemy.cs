@@ -192,13 +192,13 @@ public abstract class Enemy : Character
 
     protected void Update()
     {
-        if ( has_player_noticed() ) do_if_player_noticed();
-        
+        if (has_player_noticed()) do_if_player_noticed();
+
         else do_at_resting_state();
 
         should_flip();
         if (current_state == states.is_running) move_to();
-        
+
         set_basic_animation();
     }
 }
