@@ -9,22 +9,22 @@ public abstract class Character : Moving_item
     protected int direction;
     protected bool facing_right;
 
-    public Character(float speed_, int direction_, bool facing_right_) 
-        : base(speed_)
-    {
-        current_state = states.do_nothing;
 
-        direction = direction_;
-        facing_right = facing_right_;
+    protected void Start() 
+    {
+        current_state = states.is_standing;
+
+        direction = 0;
+        facing_right = true;
     }
 
-    private void Start() {}
+    protected virtual void stand() {}
 
     protected virtual void set_animation() {}
 
     protected override void set_basic_animation()
     {
-        GetComponent<Animator>().SetInteger("state", (int)current_state);
+        GetComponent<Animator>().SetInteger("state", (int) current_state);
     }
 
     protected override void move()

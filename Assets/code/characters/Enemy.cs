@@ -4,15 +4,13 @@ using UnityEngine;
 public abstract class Enemy : Character
 {
     private bool change_action_when_rest, change_action_when_follow, change_action_when_attack;
-    [SerializeField] private float notice_box_width, notice_box_height;
+    
+    private float start_time_of_standing, end_time_of_standing;
+    [SerializeField] private float spot_box_width, spot_box_height, left_position_border, right_position_border;
 
-    private float start_time_of_standing, end_time_of_standing; 
+    private int standing_probility, damage;
 
-    [SerializeField] private float left_position_border, right_position_border;
-
-    private int standing_probility;
-
-    private Transform transform, player_transform;
+    private Transform player_transform;
 
     private Vector2 goal;
 
@@ -29,35 +27,42 @@ public abstract class Enemy : Character
 
     //    E - Enemy
 
-    public Enemy() : base(1f, 1, true)
+    public Enemy()
     {
-        change_action_when_rest = true; change_action_when_follow = true; change_action_when_attack = true;
-
-        end_time_of_standing = 1f;
-
-        standing_probility = 30;
     }
 
     protected void Start()
     {
+        base.Start();
+
+        change_action_when_rest = true; change_action_when_follow = true; change_action_when_attack = true;
+
+        end_time_of_standing = 1f;
+
+        standing_probility = 30; damage = 0;
+
         start_time_of_standing = Time.time;
 
-        transform = GetComponent<Transform>();
         player_transform = GameObject.Find("player").transform;
     }
 
-    private bool is_in_box(Vector2 object_position, float widht, float height)
+    protected override void set_animation() 
     {
-        return (transform.position.x < object_position.x + widht) &&
-               (transform.position.x > object_position.x - widht) &&
-               (transform.position.y < object_position.y + height) &&
-               (transform.position.y > object_position.y - height) ?
+        set_basic_animation();
+    }
+
+    private bool is_in_box(Vector2 object_position, float box_width, float box_height)
+    {
+        return (transform.position.x < object_position.x + box_width)  &&
+               (transform.position.x > object_position.x - box_width)  &&
+               (transform.position.y < object_position.y + box_height) &&
+               (transform.position.y > object_position.y - box_height) ?
                true : false;
     }
 
-    private bool has_player_noticed()
+    private bool has_player_been_spotted()
     {
-        return is_in_box(player_transform.position, notice_box_width, notice_box_height) ? true : false;
+        return is_in_box(player_transform.position, spot_box_width, spot_box_height) ? true : false;
     }
 
     private void should_flip()
@@ -88,29 +93,33 @@ public abstract class Enemy : Character
         else move();
     }
 
+    private void start_choosing_new_action(ref bool can_change_action)
+    {
+        current_state = states.do_nothing;
+
+        can_change_action = true;
+    }
+
     private void set_can_change_action(ref bool can_change_action)
     {
-        if (current_state == states.is_standing && Time.time - start_time_of_standing > end_time_of_standing)
-        {
-            current_state = states.do_nothing;
+        if (current_state == states.is_standing && Time.time - start_time_of_standing > end_time_of_standing) start_choosing_new_action(ref can_change_action);
+    }
 
-            can_change_action = true;
-        }
+    private void start_damaging()
+    {
+        damage = 20;
     }
 
     private void end_of_attacking()
     {
-        current_state = states.do_nothing;
-
-        change_action_when_attack = true;
+        damage = 0;
+        start_choosing_new_action(ref change_action_when_attack);
     }
 
-    private void stand(float end_time_of_standing_)
+    protected override void stand()
     {
         start_time_of_standing = Time.time;
         
-        end_time_of_standing = end_time_of_standing_;
-
         direction = 0;
 
         standing_probility = current_state == states.is_standing ? 0 : 30;
@@ -147,10 +156,14 @@ public abstract class Enemy : Character
         {
             int probability = new System.Random().Next(0, 101);
 
-            if (probability >= 0 && probability <= stand_probability) stand(end_time_of_standing_);
+            if (probability >= 0 && probability <= stand_probability)
+            {
+                end_time_of_standing = end_time_of_standing_;
+                stand();
+            }
 
             else if (probability > stand_probability && probability <= stand_probability + run_probaility) set_pos_as_goal(goal_x, transform.position.y);
-            
+
             else attack();
             
             can_change_action = false;
@@ -182,7 +195,7 @@ public abstract class Enemy : Character
         change_action_when_follow = true;
     }
 
-    private void do_if_player_noticed()
+    private void do_if_player_is_spotted()
     {
         if ( is_in_box(player_transform.position, 1.5f, 0.7f) ) do_at_attack_mode();
         
@@ -195,13 +208,15 @@ public abstract class Enemy : Character
 
     protected void Update()
     {
-        if (has_player_noticed()) do_if_player_noticed();
+        if ( has_player_been_spotted() ) do_if_player_is_spotted();
 
         else do_at_resting_state();
 
         should_flip();
         if (current_state == states.is_running) move_to();
 
-        set_basic_animation();
+        set_animation();
     }
 }
+
+// крч зроби так шоб короче коли енемі ігрик змінювався то енемі ганявся за плеєром і не відставав від нього

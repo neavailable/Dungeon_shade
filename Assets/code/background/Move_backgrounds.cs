@@ -5,9 +5,8 @@ public class Move_backgrounds : MonoBehaviour
     private GameObject player;
     [SerializeField] private GameObject background_left, background_right;
 
-    private float bottom_left_x, bottom_right_x;
+    private float bottom_left_x, bottom_right_x, size;
     private float left_border, right_border;
-    private float size;
 
     // in constructor we set value of standard variables
     public Move_backgrounds() 
@@ -41,7 +40,7 @@ public class Move_backgrounds : MonoBehaviour
             background_right.transform.position = new Vector2(right_border, background_right.transform.position.y);
         }
 
-        else if (player.transform.position.x < left_border)
+        else if (player.transform.position.x <= left_border)
         {
             left_border -= size;
             right_border = left_border + size;

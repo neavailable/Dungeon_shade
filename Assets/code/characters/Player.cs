@@ -1,51 +1,66 @@
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 
 public class Player : Character
 {
-    public Player() : base(0.025f, 0, true) {}
+    private bool on_ground;
 
-    private void Start() {}
+    private void Start() 
+    {
+        base.Start();
 
-    protected override void set_animation() {}
+        on_ground = true;
+    }
+    protected override void stand()
+    {
+        direction = 0;
+
+        current_state = states.is_standing;
+    }
+
+    protected override void set_animation() 
+    {
+        set_basic_animation();
+    }
+
+    private void move_left()
+    {
+        if (facing_right)
+        {
+            flip();
+            facing_right = false;
+        }
+
+        direction = -1;
+        move();
+    }
+
+    private void move_right()
+    {
+        if (!facing_right)
+        {
+            flip();
+            facing_right = true;
+        }
+
+        direction = 1;
+        move();
+    }
+
     private void cath_keys()
     {
-        if (Keyboard.current.aKey.isPressed)
-        {
-            if (facing_right)
-            {
-                flip();
-                facing_right = false;
-            }
+        if (Keyboard.current.aKey.isPressed) move_left();
 
-            direction = -1;
+        else if (Keyboard.current.dKey.isPressed) move_right();
 
-            move();
-        }
-
-        else if (Keyboard.current.dKey.isPressed)
-        {
-            if (!facing_right)
-            {
-                flip();
-                facing_right = true;
-            }
-
-            direction = 1;
-
-            move();
-        }
-
-        else
-        {
-            current_state = states.is_standing;
-            direction = 0;
-        }
+        else stand();
     }
 
     private void Update()
     {
         cath_keys();
-        set_basic_animation();
+
+        set_animation();
     }
 };

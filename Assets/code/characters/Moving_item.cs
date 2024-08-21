@@ -4,11 +4,6 @@ public abstract class Moving_item : MonoBehaviour
 {
     [SerializeField] private float speed;
 
-    // in constructor we set value of standard variables
-    public Moving_item(float speed_)
-    {
-        speed = speed_;
-    }
 
     // in Start we set value of specailized (unity) objects
     private void Start() {}
