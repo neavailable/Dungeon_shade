@@ -875,7 +875,7 @@ Transform:
   m_GameObject: {fileID: 423974046}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 100, z: 0.11068719}
+  m_LocalPosition: {x: -0.18, y: 100.06, z: 0.11068719}
   m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3334,7 +3334,7 @@ MonoBehaviour:
   right_position_border: 0
   spot_box_width: 8
   spot_box_height: 0.5
-  attack_box_width: 1.7
+  attack_box_width: 1.5
   attack_box_height: 0.7
 --- !u!1 &1044583949
 GameObject:
@@ -3894,7 +3894,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0.02
-  roll_lenght: 3
+  roll_lenght: 0
 --- !u!95 &1535256143
 Animator:
   serializedVersion: 5

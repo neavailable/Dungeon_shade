@@ -4,7 +4,7 @@ using UnityEngine;
 public class Get_damage : Moving_item
 {
     private bool is_pinned;
-    
+
     private Transform current_transform;
     private Character pinned_character;
 
@@ -54,5 +54,5 @@ public class Get_damage : Moving_item
         move_and_set_animation();
     }
 
-    private void Update() {}
+    private void Update() { }
 }
