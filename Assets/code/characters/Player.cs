@@ -5,6 +5,9 @@ using UnityEngine.InputSystem;
 public class Player : Character
 {
     private bool on_ground;
+    private Vector2 goal;
+
+    [SerializeField] private float roll_lenght;
 
     private void Start() 
     {
@@ -12,6 +15,7 @@ public class Player : Character
 
         on_ground = true;
     }
+
     protected override void stand()
     {
         direction = 0;
@@ -48,19 +52,35 @@ public class Player : Character
         move();
     }
 
+    private void roll()
+    {
+        goal = new Vector2(transform.position.x + roll_lenght * direction, transform.position.y);
+
+        current_state = states.is_rolling;
+
+        direction = 1;
+    }
+
     private void cath_keys()
     {
         if (Keyboard.current.aKey.isPressed) move_left();
-
+        
         else if (Keyboard.current.dKey.isPressed) move_right();
-
+        
+        else if (Keyboard.current.fKey.isPressed) roll();
+        
         else stand();
+    }
+
+    private void move_to()
+    {
+        move_right();
     }
 
     private void Update()
     {
-        cath_keys();
-
+        if (current_state == states.is_rolling) move_right();
+        else cath_keys();
         set_animation();
     }
 };

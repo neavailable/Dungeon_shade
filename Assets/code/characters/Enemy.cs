@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
  
 
@@ -6,11 +7,13 @@ public abstract class Enemy : Character
     private bool change_action_when_rest, change_action_when_follow, change_action_when_attack;
     
     private float start_time_of_standing, end_time_of_standing;
-    [SerializeField] private float spot_box_width, spot_box_height, left_position_border, right_position_border;
+    [SerializeField] private float left_position_border, right_position_border, 
+          spot_box_width, spot_box_height, attack_box_width, attack_box_height;
 
     private int standing_probility, damage;
 
-    private Transform player_transform;
+    //private GameObject player;
+    private Player player;
 
     private Vector2 goal;
 
@@ -27,10 +30,6 @@ public abstract class Enemy : Character
 
     //    E - Enemy
 
-    public Enemy()
-    {
-    }
-
     protected void Start()
     {
         base.Start();
@@ -43,7 +42,7 @@ public abstract class Enemy : Character
 
         start_time_of_standing = Time.time;
 
-        player_transform = GameObject.Find("player").transform;
+        player = GameObject.Find("player").GetComponent<Player>();
     }
 
     protected override void set_animation() 
@@ -62,7 +61,12 @@ public abstract class Enemy : Character
 
     private bool has_player_been_spotted()
     {
-        return is_in_box(player_transform.position, spot_box_width, spot_box_height) ? true : false;
+        return is_in_box(player.transform.position, spot_box_width, spot_box_height) ? true : false;
+    }
+
+    private bool should_attack_player()
+    {
+        return is_in_box(player.transform.position, attack_box_width, attack_box_height) || current_state == states.is_attacking ? true : false;
     }
 
     private void should_flip()
@@ -74,6 +78,7 @@ public abstract class Enemy : Character
             direction = -1;
             facing_right = false;
         }
+
         else
         {
             direction = 1;
@@ -85,7 +90,7 @@ public abstract class Enemy : Character
 
     private void move_to()
     {
-        if (is_in_box(goal, 1f, 1f))
+        if ( is_in_box(goal, 1f, 1f) )
         {
             change_action_when_rest = true; change_action_when_follow = true; change_action_when_attack = true;
         }
@@ -107,12 +112,18 @@ public abstract class Enemy : Character
 
     private void start_damaging()
     {
-        damage = 20;
+        if ( is_in_box(player.transform.position, attack_box_width, attack_box_height) )
+        {
+            damage = 20;
+
+            player.get_damage();
+        }
     }
 
-    private void end_of_attacking()
+    private void end_damaging()
     {
         damage = 0;
+
         start_choosing_new_action(ref change_action_when_attack);
     }
 
@@ -172,7 +183,8 @@ public abstract class Enemy : Character
 
     private void do_at_resting_state()
     {
-        generate_action(ref change_action_when_rest, 40, 60, (float) (new System.Random().NextDouble() * (2.5f - 0.5f) + 0.5f), (float) (new System.Random().NextDouble() * (right_position_border - left_position_border) + left_position_border));
+        generate_action( ref change_action_when_rest, 40, 60, (float) (new System.Random().NextDouble() * (2.5f - 0.5f) + 0.5f), 
+            (float) (new System.Random().NextDouble() * (right_position_border - left_position_border) + left_position_border) );
 
         change_action_when_follow = true; change_action_when_attack = true;
 
@@ -181,7 +193,7 @@ public abstract class Enemy : Character
 
     private void do_at_follow_mode()
     {
-        generate_action(ref change_action_when_follow, 10, 90, (float) (new System.Random().NextDouble() * (2.5f - 0.5f) + 0.5f), player_transform.position.x);
+        generate_action(ref change_action_when_follow, 10, 90, (float) (new System.Random().NextDouble() * (2.5f - 0.5f) + 0.5f), player.transform.position.x);
 
         change_action_when_attack = true;
 
@@ -190,20 +202,20 @@ public abstract class Enemy : Character
 
     private void do_at_attack_mode()
     {
-        generate_action(ref change_action_when_attack, standing_probility, 0, (float) (new System.Random().NextDouble() * (1f - 0.5f) + 0.5f), player_transform.position.x);
+        generate_action(ref change_action_when_attack, standing_probility, 0, (float) (new System.Random().NextDouble() * (1f - 0.5f) + 0.5f), player.transform.position.x);
         
         change_action_when_follow = true;
     }
 
     private void do_if_player_is_spotted()
     {
-        if ( is_in_box(player_transform.position, 1.5f, 0.7f) ) do_at_attack_mode();
+        if ( should_attack_player() ) do_at_attack_mode();
         
         else do_at_follow_mode();
         
         change_action_when_rest = true;
 
-        goal = player_transform.position;
+        goal = player.transform.position;
     }
 
     protected void Update()
@@ -218,5 +230,3 @@ public abstract class Enemy : Character
         set_animation();
     }
 }
-
-// крч зроби так шоб короче коли енемі ігрик змінювався то енемі ганявся за плеєром і не відставав від нього

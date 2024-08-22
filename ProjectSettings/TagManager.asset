@@ -66,3 +66,6 @@ TagManager:
   - name: player
     uniqueID: 3806997729
     locked: 0
+  - name: get_damage_animation
+    uniqueID: 3201086459
+    locked: 0

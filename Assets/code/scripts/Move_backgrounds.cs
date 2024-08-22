@@ -2,22 +2,19 @@ using UnityEngine;
 
 public class Move_backgrounds : MonoBehaviour
 {
-    private GameObject player;
+    private Transform player_transform;
     [SerializeField] private GameObject background_left, background_right;
 
     private float bottom_left_x, bottom_right_x, size;
     private float left_border, right_border;
 
-    // in constructor we set value of standard variables
-    public Move_backgrounds() 
-    {
-        left_border = 2.5f; right_border = 5f;
-    }
 
     // in Start we set value of specailized (unity) objects
     private void Start()
     {
-        player = GameObject.Find("player");
+        left_border = 2.5f; right_border = 5f;
+
+        player_transform = GameObject.Find("player").transform;
 
         size = background_right.GetComponent<SpriteRenderer>().bounds.size.x;
     
@@ -31,7 +28,7 @@ public class Move_backgrounds : MonoBehaviour
     // borders relocate by size also
     private void move()
     {
-        if (player.transform.position.x > right_border)
+        if (player_transform.position.x > right_border)
         {
             right_border += size;
             left_border = right_border - size;
@@ -40,7 +37,7 @@ public class Move_backgrounds : MonoBehaviour
             background_right.transform.position = new Vector2(right_border, background_right.transform.position.y);
         }
 
-        else if (player.transform.position.x <= left_border)
+        else if (player_transform.position.x <= left_border)
         {
             left_border -= size;
             right_border = left_border + size;
