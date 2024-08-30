@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
  
 
@@ -7,12 +6,12 @@ public abstract class Enemy : Character
     private bool change_action_when_rest, change_action_when_follow, change_action_when_attack;
     
     private float start_time_of_standing, end_time_of_standing;
-    [SerializeField] private float left_position_border, right_position_border, 
-          spot_box_width, spot_box_height, attack_box_width, attack_box_height;
+    [SerializeField] private float left_position_border, right_position_border, spot_box_width, spot_box_height;
+
+    private float attack_box_width, attack_box_height;
 
     private int standing_probility, damage;
 
-    //private GameObject player;
     private Player player;
 
     private Vector2 goal;
@@ -30,6 +29,7 @@ public abstract class Enemy : Character
 
     //    E - Enemy
 
+
     protected void Start()
     {
         base.Start();
@@ -37,6 +37,8 @@ public abstract class Enemy : Character
         change_action_when_rest = true; change_action_when_follow = true; change_action_when_attack = true;
 
         end_time_of_standing = 1f;
+
+        attack_box_width = 1.8f; attack_box_height = 0.5f;
 
         standing_probility = 30; damage = 0;
 
@@ -157,6 +159,8 @@ public abstract class Enemy : Character
         direction = 0;
 
         standing_probility += 30;
+
+        animator.SetTrigger("is_attacking");
     }
 
     private void generate_action(ref bool can_change_action, int stand_probability, int run_probaility, float end_time_of_standing_, float goal_x)

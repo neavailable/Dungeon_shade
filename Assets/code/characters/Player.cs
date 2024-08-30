@@ -9,6 +9,7 @@ public class Player : Character
 
     [SerializeField] private float roll_lenght;
 
+
     private void Start() 
     {
         base.Start();
@@ -55,10 +56,11 @@ public class Player : Character
     private void roll()
     {
         goal = new Vector2(transform.position.x + roll_lenght * direction, transform.position.y);
-
+        
+        direction = 1;
         current_state = states.is_rolling;
 
-        direction = 1;
+        animator.SetTrigger("is_rolling");
     }
 
     private void cath_keys()
@@ -75,12 +77,16 @@ public class Player : Character
     private void move_to()
     {
         move_right();
+
+        current_state = states.is_rolling;
     }
 
     private void Update()
     {
-        if (current_state == states.is_rolling) move_right();
+        if (current_state == states.is_rolling) move_to();
+
         else cath_keys();
+        
         set_animation();
     }
 };

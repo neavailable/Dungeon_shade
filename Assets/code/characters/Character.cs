@@ -13,6 +13,8 @@ public abstract class Character : Moving_item
 
     private Get_damage get_damage_script;
 
+    protected Animator animator;
+
 
     protected void Start() 
     {
@@ -23,6 +25,7 @@ public abstract class Character : Moving_item
 
         get_damage_script = GameObject.Find("get_damage_animation_1").GetComponent<Get_damage>();
 
+        animator = GetComponent<Animator>();
     }
 
     protected virtual void stand() {}
