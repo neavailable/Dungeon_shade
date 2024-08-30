@@ -1,26 +1,15 @@
-using UnityEngine;
 using UnityEngine.InputSystem;
 
 
 public class Player : Character
 {
-    private bool on_ground;
-    private Vector2 goal;
-
-    [SerializeField] private float roll_lenght;
-
-
     private void Start() 
     {
         base.Start();
-
-        on_ground = true;
     }
 
     protected override void stand()
     {
-        direction = 0;
-
         current_state = states.is_standing;
     }
 
@@ -54,10 +43,7 @@ public class Player : Character
     }
 
     private void roll()
-    {
-        goal = new Vector2(transform.position.x + roll_lenght * direction, transform.position.y);
-        
-        direction = 1;
+    {        
         current_state = states.is_rolling;
 
         animator.SetTrigger("is_rolling");
@@ -65,6 +51,8 @@ public class Player : Character
 
     private void cath_keys()
     {
+        if (current_state == states.is_rolling) return;
+
         if (Keyboard.current.aKey.isPressed) move_left();
         
         else if (Keyboard.current.dKey.isPressed) move_right();
@@ -76,7 +64,9 @@ public class Player : Character
 
     private void move_to()
     {
-        move_right();
+        direction = facing_right ? 1 : -1;
+
+        move();
 
         current_state = states.is_rolling;
     }
