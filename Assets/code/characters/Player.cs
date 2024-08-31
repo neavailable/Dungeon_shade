@@ -1,16 +1,33 @@
+using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 
 public class Player : Character
 {
+    private Collider2D player_collider;
+
+    private List<Collider2D> enemy_colliders;
+
     private void Start() 
     {
         base.Start();
+
+        player_collider = GetComponent<Collider2D>();
+
+        enemy_colliders = new List<Collider2D>();
+
+        find_all_enemies_colliders();
     }
 
     protected override void stand()
     {
-        current_state = states.is_standing;
+        base.stand();
+
+        foreach (Collider2D enemy_collider in enemy_colliders)
+        {
+            Physics2D.IgnoreCollision(player_collider, enemy_collider, false);
+        }
     }
 
     protected override void set_animation() 
@@ -18,27 +35,19 @@ public class Player : Character
         set_basic_animation();
     }
 
-    private void move_left()
+    private void find_all_enemies_colliders()
     {
-        if (facing_right)
+        foreach ( GameObject obj in FindObjectsOfType<GameObject>() )
         {
-            flip();
-            facing_right = false;
+            if (obj.tag == "enemy") enemy_colliders.Add( obj.gameObject.GetComponent<Collider2D>() );
         }
-
-        direction = -1;
-        move();
     }
 
-    private void move_right()
+    private void move_to_side(int direction_)
     {
-        if (!facing_right)
-        {
-            flip();
-            facing_right = true;
-        }
+        if (direction == -direction_) flip();
 
-        direction = 1;
+        direction = direction_;
         move();
     }
 
@@ -47,15 +56,18 @@ public class Player : Character
         current_state = states.is_rolling;
 
         animator.SetTrigger("is_rolling");
+
+        foreach (Collider2D enemy_collider in enemy_colliders)
+        {
+            Physics2D.IgnoreCollision(player_collider, enemy_collider, true);
+        }
     }
 
     private void cath_keys()
     {
-        if (current_state == states.is_rolling) return;
-
-        if (Keyboard.current.aKey.isPressed) move_left();
+        if (Keyboard.current.aKey.isPressed) move_to_side(-1);
         
-        else if (Keyboard.current.dKey.isPressed) move_right();
+        else if (Keyboard.current.dKey.isPressed) move_to_side(1);
         
         else if (Keyboard.current.fKey.isPressed) roll();
         
@@ -64,8 +76,6 @@ public class Player : Character
 
     private void move_to()
     {
-        direction = facing_right ? 1 : -1;
-
         move();
 
         current_state = states.is_rolling;

@@ -16,6 +16,7 @@ public abstract class Enemy : Character
 
     private Vector2 goal;
 
+
     // notice_x and notice_y are sides of box. when player come to the box enemy start move to player
 
     //  notice_box_width
@@ -73,21 +74,14 @@ public abstract class Enemy : Character
 
     private void should_flip()
     {
-        bool previous_facing_right = facing_right;
+        int previous_direction = direction;
 
-        if (goal.x < transform.position.x)
-        {
-            direction = -1;
-            facing_right = false;
-        }
+        if (goal.x < transform.position.x) direction = -1;        
 
-        else
-        {
-            direction = 1;
-            facing_right = true;
-        }
+        else direction = 1;
+        
 
-        if (facing_right != previous_facing_right) flip();
+        if (direction != previous_direction) flip();
     }
 
     private void move_to()
@@ -133,11 +127,9 @@ public abstract class Enemy : Character
     {
         start_time_of_standing = Time.time;
         
-        direction = 0;
-
         standing_probility = current_state == states.is_standing ? 0 : 30;
             
-        current_state = states.is_standing;
+        base.stand();
 
         standing_probility = 0;
     }
@@ -156,7 +148,6 @@ public abstract class Enemy : Character
     private void attack()
     {
         current_state = states.is_attacking; change_action_when_rest = true; change_action_when_follow = true;
-        direction = 0;
 
         standing_probility += 30;
 

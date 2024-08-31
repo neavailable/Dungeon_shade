@@ -21,22 +21,20 @@ AnimationClip:
   - serializedVersion: 2
     curve:
     - time: 0
-      value: {fileID: 21300000, guid: 234d363e52c835b44b0e9e005f0f4029, type: 3}
-    - time: 0.06666667
       value: {fileID: 21300000, guid: 73e85e1bdb63c9249913085700192114, type: 3}
-    - time: 0.13333334
+    - time: 0.06666667
       value: {fileID: 21300000, guid: 94b6a7d2f5ed02c44bc75b49d6fdc096, type: 3}
-    - time: 0.2
+    - time: 0.15
       value: {fileID: 21300000, guid: a7ad6ceb1bcc4ae4790fe7fbcc53336b, type: 3}
-    - time: 0.25
+    - time: 0.2
       value: {fileID: 21300000, guid: 38eb50d661f66554ea3a58dcadaa7688, type: 3}
-    - time: 0.33333334
+    - time: 0.3
       value: {fileID: 21300000, guid: 681ca7a7317e4564db76c354706c7874, type: 3}
-    - time: 0.41666666
+    - time: 0.38333333
       value: {fileID: 21300000, guid: b877b63f200504043b65cb7a490f4cac, type: 3}
-    - time: 0.46666667
+    - time: 0.45
       value: {fileID: 21300000, guid: 0d04b52bedb12e6469164287e1ef02e6, type: 3}
-    - time: 0.53333336
+    - time: 0.51666665
       value: {fileID: 21300000, guid: d32fbfd54d74100449433dbdf7818ef3, type: 3}
     - time: 0.6
       value: {fileID: 21300000, guid: 492d04cf148b64745a699ba0f14bb272, type: 3}
@@ -64,7 +62,6 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: 21300000, guid: 234d363e52c835b44b0e9e005f0f4029, type: 3}
     - {fileID: 21300000, guid: 73e85e1bdb63c9249913085700192114, type: 3}
     - {fileID: 21300000, guid: 94b6a7d2f5ed02c44bc75b49d6fdc096, type: 3}
     - {fileID: 21300000, guid: a7ad6ceb1bcc4ae4790fe7fbcc53336b, type: 3}
@@ -99,4 +96,11 @@ AnimationClip:
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
-  m_Events: []
+  m_Events:
+  - time: 0.68333334
+    functionName: stand
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0

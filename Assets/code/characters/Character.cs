@@ -9,7 +9,6 @@ public abstract class Character : Moving_item
     [SerializeField] private float speed;
 
     protected int direction;
-    protected bool facing_right;
 
     private Get_damage get_damage_script;
 
@@ -20,15 +19,17 @@ public abstract class Character : Moving_item
     {
         current_state = states.is_standing;
 
-        direction = 0;
-        facing_right = true;
+        direction = 1;
 
         get_damage_script = GameObject.Find("get_damage_animation_1").GetComponent<Get_damage>();
 
         animator = GetComponent<Animator>();
     }
 
-    protected virtual void stand() {}
+    protected virtual void stand() 
+    {
+        current_state = states.is_standing;
+    }
 
     protected virtual void set_animation() {}
 
