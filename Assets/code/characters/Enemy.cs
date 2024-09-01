@@ -1,26 +1,26 @@
 using UnityEngine;
- 
+
 
 public abstract class Enemy : Character
 {
-    private bool change_action_when_rest, change_action_when_follow, change_action_when_attack;
-    
-    private float start_time_of_standing, end_time_of_standing;
-    [SerializeField] private float left_position_border, right_position_border, spot_box_width, spot_box_height;
-
-    private float attack_box_width, attack_box_height;
+    private float start_time_of_standing, end_time_of_standing, attack_box_width, attack_box_height;
 
     private int standing_probility, damage;
 
+    private bool change_action_when_rest, change_action_when_follow, change_action_when_attack;
+    
     private Player player;
 
     private Vector2 goal;
+
+    [SerializeField] private float left_position_border, right_position_border, spot_box_width, spot_box_height;
+
 
 
     // notice_x and notice_y are sides of box. when player come to the box enemy start move to player
 
     //  notice_box_width
-    //      <---->
+    //      < -- >
     //    __________
     //   |          |
     //   |          |^
@@ -37,20 +37,18 @@ public abstract class Enemy : Character
 
         change_action_when_rest = true; change_action_when_follow = true; change_action_when_attack = true;
 
-        end_time_of_standing = 1f;
+        start_time_of_standing = Time.time; end_time_of_standing = 1f;
 
         attack_box_width = 1.8f; attack_box_height = 0.5f;
 
         standing_probility = 30; damage = 0;
-
-        start_time_of_standing = Time.time;
 
         player = GameObject.Find("player").GetComponent<Player>();
     }
 
     protected override void set_animation() 
     {
-        set_basic_animation();
+        base.set_animation();
     }
 
     private bool is_in_box(Vector2 object_position, float box_width, float box_height)
@@ -123,7 +121,7 @@ public abstract class Enemy : Character
         start_choosing_new_action(ref change_action_when_attack);
     }
 
-    protected override void stand()
+    public override void stand()
     {
         start_time_of_standing = Time.time;
         

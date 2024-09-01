@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Move_backgrounds : MonoBehaviour
+public class Background_mover : MonoBehaviour
 {
     private Transform player_transform;
     [SerializeField] private GameObject background_left, background_right;

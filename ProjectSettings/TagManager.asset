@@ -57,6 +57,9 @@ TagManager:
   - name: near_forest
     uniqueID: 2261784725
     locked: 0
+  - name: objects
+    uniqueID: 3859021395
+    locked: 0
   - name: tiles
     uniqueID: 2101652911
     locked: 0

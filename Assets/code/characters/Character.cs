@@ -3,14 +3,14 @@ using UnityEngine;
 
 public abstract class Character : Moving_item
 {
+    private Get_damage get_damage_script;
+
     protected enum states { do_nothing, is_standing, is_running, is_attacking, is_getting_damage, is_climbing_up, is_climbing_down, is_rolling };
     protected states current_state;
 
-    [SerializeField] private float speed;
+    [SerializeField] protected float speed;
 
     protected int direction;
-
-    private Get_damage get_damage_script;
 
     protected Animator animator;
 
@@ -26,16 +26,12 @@ public abstract class Character : Moving_item
         animator = GetComponent<Animator>();
     }
 
-    protected virtual void stand() 
-    {
-        current_state = states.is_standing;
-    }
-
-    protected virtual void set_animation() {}
+    protected virtual void set_animation() => set_basic_animation();
+    
 
     protected override void set_basic_animation()
     {
-        if (current_state != states.is_getting_damage) GetComponent<Animator>().SetInteger("state", (int) current_state);
+        if (current_state != states.is_getting_damage) GetComponent<Animator>().SetInteger("state", (int)current_state);
     }
 
     protected override void move()
@@ -50,21 +46,25 @@ public abstract class Character : Moving_item
     protected void flip()
     {
         Vector2 scaler = transform.localScale;
-        scaler.x *= -1;
+        scaler.x = -scaler.x;
         transform.localScale = scaler;
     }
+
+    protected void decrease_speed_after_rolling() => speed = 0.015f;
+    
+
+    protected void increase_speed_while_rolling() => speed = 0.02f;
+    
+
+    public virtual void stand() => current_state = states.is_standing;
+    
 
     public void get_damage()
     {
         get_damage_script.set_pinned_object(this);
 
-        current_state = states.is_getting_damage;
+        if (current_state != states.is_rolling) current_state = states.is_getting_damage;
     }
 
-    public void end_getting_damage()
-    {
-        current_state = states.is_standing;
-    }
-
-    private void Update() {}
+    public void end_getting_damage() => current_state = states.is_standing;
 }
