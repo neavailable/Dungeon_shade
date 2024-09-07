@@ -1,5 +1,6 @@
 using UnityEngine;
 
+
 public class Background_mover : MonoBehaviour
 {
     private Transform player_transform;
@@ -22,6 +23,12 @@ public class Background_mover : MonoBehaviour
         bottom_left_x = background_right.transform.position.x - size;
     }
 
+    private void change_backgorud_position()
+    {
+        background_left.transform.position = new Vector2(left_border, background_right.transform.position.y);
+        background_right.transform.position = new Vector2(right_border, background_right.transform.position.y);
+    }
+
     // that is move background script. how it works?
     // left_border and right_border are like box where player are locating
     // when player across left_border or right_border two images relocate by their size
@@ -33,8 +40,7 @@ public class Background_mover : MonoBehaviour
             right_border += size;
             left_border = right_border - size;
 
-            background_left.transform.position = new Vector2(left_border, background_right.transform.position.y);
-            background_right.transform.position = new Vector2(right_border, background_right.transform.position.y);
+            change_backgorud_position();
         }
 
         else if (player_transform.position.x <= left_border)
@@ -42,11 +48,10 @@ public class Background_mover : MonoBehaviour
             left_border -= size;
             right_border = left_border + size;
 
-            background_left.transform.position = new Vector2(left_border, background_right.transform.position.y);
-            background_right.transform.position = new Vector2(right_border, background_right.transform.position.y);
+            change_backgorud_position();
         }
     }
-    
+
     //there we will call methods which are updating every frame
     private void Update()
     {

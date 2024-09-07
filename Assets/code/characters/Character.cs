@@ -1,16 +1,19 @@
 using UnityEngine;
 
+[RequireComponent(typeof(SpriteRenderer), typeof(Rigidbody2D), typeof(BoxCollider2D))]
+[RequireComponent(typeof(Animator))]
+
 
 public abstract class Character : Moving_item
 {
     private Get_damage get_damage_script;
 
-    protected enum states { do_nothing, is_standing, is_running, is_attacking, is_getting_damage, is_climbing_up, is_climbing_down, is_rolling };
+    protected enum states { do_nothing, is_standing, is_running, is_attacking, is_getting_damage, is_climbing, is_rolling };
     protected states current_state;
 
-    [SerializeField] protected float speed;
+    protected float current_speed;
 
-    protected int direction;
+    protected int direction_x, direction_y;
 
     protected Animator animator;
 
@@ -19,7 +22,7 @@ public abstract class Character : Moving_item
     {
         current_state = states.is_standing;
 
-        direction = 1;
+        direction_x = 1; direction_y = 0;
 
         get_damage_script = GameObject.Find("get_damage_animation_1").GetComponent<Get_damage>();
 
@@ -28,7 +31,6 @@ public abstract class Character : Moving_item
 
     protected virtual void set_animation() => set_basic_animation();
     
-
     protected override void set_basic_animation()
     {
         if (current_state != states.is_getting_damage) GetComponent<Animator>().SetInteger("state", (int)current_state);
@@ -37,7 +39,11 @@ public abstract class Character : Moving_item
     protected override void move()
     {
         Vector2 position = transform.position;
-        position.x += speed * direction;
+
+        if (direction_y == 0) position.x += current_speed * direction_x;
+
+        else position.y += current_speed * direction_y / 2f;
+
         transform.position = position;
 
         current_state = states.is_running;
@@ -50,14 +56,7 @@ public abstract class Character : Moving_item
         transform.localScale = scaler;
     }
 
-    protected void decrease_speed_after_rolling() => speed = 0.015f;
-    
-
-    protected void increase_speed_while_rolling() => speed = 0.02f;
-    
-
     public virtual void stand() => current_state = states.is_standing;
-    
 
     public void get_damage()
     {

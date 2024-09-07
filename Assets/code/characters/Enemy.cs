@@ -16,7 +16,6 @@ public abstract class Enemy : Character
     [SerializeField] private float left_position_border, right_position_border, spot_box_width, spot_box_height;
 
 
-
     // notice_x and notice_y are sides of box. when player come to the box enemy start move to player
 
     //  notice_box_width
@@ -35,6 +34,8 @@ public abstract class Enemy : Character
     {
         base.Start();
 
+        current_speed = 0.015f;
+
         change_action_when_rest = true; change_action_when_follow = true; change_action_when_attack = true;
 
         start_time_of_standing = Time.time; end_time_of_standing = 1f;
@@ -44,11 +45,6 @@ public abstract class Enemy : Character
         standing_probility = 30; damage = 0;
 
         player = GameObject.Find("player").GetComponent<Player>();
-    }
-
-    protected override void set_animation() 
-    {
-        base.set_animation();
     }
 
     private bool is_in_box(Vector2 object_position, float box_width, float box_height)
@@ -72,19 +68,19 @@ public abstract class Enemy : Character
 
     private void should_flip()
     {
-        int previous_direction = direction;
+        int previous_direction = direction_x;
 
-        if (goal.x < transform.position.x) direction = -1;        
+        if (goal.x < transform.position.x) direction_x = -1;        
 
-        else direction = 1;
+        else direction_x = 1;
         
 
-        if (direction != previous_direction) flip();
+        if (direction_x != previous_direction) flip();
     }
 
     private void move_to()
     {
-        if ( is_in_box(goal, 1f, 1f) )
+        if ( is_in_box(goal, 0.5f, 0.5f) )
         {
             change_action_when_rest = true; change_action_when_follow = true; change_action_when_attack = true;
         }
@@ -119,17 +115,6 @@ public abstract class Enemy : Character
         damage = 0;
 
         start_choosing_new_action(ref change_action_when_attack);
-    }
-
-    public override void stand()
-    {
-        start_time_of_standing = Time.time;
-        
-        standing_probility = current_state == states.is_standing ? 0 : 30;
-            
-        base.stand();
-
-        standing_probility = 0;
     }
 
     private void set_pos_as_goal(float x, float y)
@@ -176,9 +161,8 @@ public abstract class Enemy : Character
 
     private void do_at_resting_state()
     {
-        generate_action( ref change_action_when_rest, 40, 60, (float) (new System.Random().NextDouble() * (2.5f - 0.5f) + 0.5f), 
-            (float) (new System.Random().NextDouble() * (right_position_border - left_position_border) + left_position_border) );
-
+        generate_action(ref change_action_when_rest, 40, 60, (float) (new System.Random().NextDouble() * (2.5f - 0.5f) + 0.5f), 
+            (float)(new System.Random().NextDouble() * (right_position_border - left_position_border) + left_position_border));
         change_action_when_follow = true; change_action_when_attack = true;
 
         standing_probility = 30;
@@ -211,6 +195,22 @@ public abstract class Enemy : Character
         goal = player.transform.position;
     }
 
+    protected override void set_animation()
+    {
+        base.set_animation();
+    }
+
+    public override void stand()
+    {
+        start_time_of_standing = Time.time;
+
+        standing_probility = current_state == states.is_standing ? 0 : 30;
+
+        base.stand();
+
+        standing_probility = 0;
+    }
+
     protected void Update()
     {
         if ( has_player_been_spotted() ) do_if_player_is_spotted();
@@ -219,7 +219,6 @@ public abstract class Enemy : Character
 
         should_flip();
         if (current_state == states.is_running) move_to();
-
         set_animation();
     }
 }
