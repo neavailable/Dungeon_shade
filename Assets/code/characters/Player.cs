@@ -78,20 +78,13 @@ public class Player : Character
 
     private void set_rolling_speed() => current_speed = rolling_speed;
 
-    private void stop_rolling()
-    {
-        base.stand();
-
-        player_roll?.Invoke(false);
-
-        set_running_speed();
-    }
-
     protected override void set_animation() => base.set_animation();
 
     public override void stand()
     {
         base.stand();
+
+        player_roll?.Invoke(false);
 
         set_running_speed();
     }

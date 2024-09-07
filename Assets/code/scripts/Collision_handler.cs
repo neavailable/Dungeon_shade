@@ -7,6 +7,7 @@ public class Collision_handler : MonoBehaviour
     private List<Collider2D> enemy_colliders;
     private Collider2D player_collider;
 
+
     private void Start()
     {
         enemy_colliders = new List<Collider2D>();
@@ -24,12 +25,10 @@ public class Collision_handler : MonoBehaviour
 
     private void OnDisable() => Player.player_roll -= ignore_collision;
     
-
     private void ignore_collision(bool ignore_collision)
     {
         foreach (Collider2D enemy_collider in enemy_colliders)
         {
-            Debug.Log(1);
             Physics2D.IgnoreCollision(player_collider, enemy_collider, ignore_collision);
         }
     }
