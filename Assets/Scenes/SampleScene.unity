@@ -3800,8 +3800,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48a3d1a70ad130a478b83012427d14ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  running_speed: 0.01
-  rolling_speed: 0.015
+  running_speed: 0.015
+  rolling_speed: 0.017
   climbing_speed: 0.01
 --- !u!95 &1535256143
 Animator:

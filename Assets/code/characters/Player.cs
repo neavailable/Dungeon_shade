@@ -98,8 +98,6 @@ public class Player : Character
 
         move();
     }
-
-    public bool is_rolling() => current_state == states.is_rolling;
     
     public void start_rolling()
     {
@@ -144,6 +142,11 @@ public class Player : Character
         animator.SetTrigger("is_climbing");
     }
     public void base_stand() => base.stand();
+
+    public bool is_getting_damage() => current_state == states.is_getting_damage;
+
+    public bool is_rolling() => current_state == states.is_rolling;
+
     public bool is_climbing() => current_state == states.is_climbing;
 
     public void climb()

@@ -34,7 +34,7 @@ public abstract class Enemy : Character
     {
         base.Start();
 
-        current_speed = 0.015f;
+        current_speed = 0.012f;
 
         change_action_when_rest = true; change_action_when_follow = true; change_action_when_attack = true;
 

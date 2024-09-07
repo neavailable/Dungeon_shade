@@ -8,6 +8,9 @@ public class UI_and_input : MonoBehaviour
 
     private void player_moving()
     {
+        if (player_class.is_getting_damage()) return;
+
+
         if (Input.GetKey(KeyCode.A)) player_class.move_x(-1);
         
         else if (Input.GetKey(KeyCode.D)) player_class.move_x(1);
