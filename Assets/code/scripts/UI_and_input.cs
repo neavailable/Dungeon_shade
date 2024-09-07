@@ -16,7 +16,7 @@ public class UI_and_input : MonoBehaviour
                 
         else if (Input.GetKeyDown(KeyCode.E)) player_class.start_climbing();
 
-        else ((Character)player_class).stand(); 
+        else player_class.stand(); 
     }
 
     private void Update()

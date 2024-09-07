@@ -143,7 +143,7 @@ public class Player : Character
         current_state = states.is_climbing;
         animator.SetTrigger("is_climbing");
     }
-
+    public void base_stand() => base.stand();
     public bool is_climbing() => current_state == states.is_climbing;
 
     public void climb()
