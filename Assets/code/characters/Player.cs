@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 
 public class Player : Character
@@ -14,7 +13,7 @@ public class Player : Character
 
     private Collider2D player_collider;
 
-    public static System.Action<Collider2D, bool> player_started_roll, player_stoped_roll;
+    public static System.Action<bool> player_roll;
 
 
     private void Start() 
@@ -83,7 +82,7 @@ public class Player : Character
     {
         base.stand();
 
-        player_stoped_roll?.Invoke(player_collider, false);
+        player_roll?.Invoke(false);
 
         set_running_speed();
     }
@@ -118,7 +117,7 @@ public class Player : Character
 
         animator.SetTrigger("is_rolling");
 
-        player_started_roll?.Invoke(player_collider, true);
+        player_roll?.Invoke(true);
 
         start_time = Time.time;
 
