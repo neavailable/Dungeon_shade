@@ -141,6 +141,7 @@ public class Player : Character
         current_state = states.is_climbing;
         animator.SetTrigger("is_climbing");
     }
+
     public void base_stand() => base.stand();
 
     public bool is_getting_damage() => current_state == states.is_getting_damage;
@@ -156,8 +157,5 @@ public class Player : Character
         current_state = states.is_climbing;
     }
 
-    private void Update()
-    { 
-        set_animation();
-    }
+    private void Update() => set_animation();
 };

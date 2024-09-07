@@ -6,11 +6,8 @@ public class UI_and_input : MonoBehaviour
     [SerializeField] private Player player_class;
 
 
-    private void player_moving()
+    private void player_input()
     {
-        if (player_class.is_getting_damage()) return;
-
-
         if (Input.GetKey(KeyCode.A)) player_class.move_x(-1);
         
         else if (Input.GetKey(KeyCode.D)) player_class.move_x(1);
@@ -19,7 +16,7 @@ public class UI_and_input : MonoBehaviour
                 
         else if (Input.GetKeyDown(KeyCode.E)) player_class.start_climbing();
 
-        else player_class.stand(); 
+        else ((Character) player_class).stand(); 
     }
 
     private void Update()
@@ -28,6 +25,6 @@ public class UI_and_input : MonoBehaviour
 
         else if (player_class.is_climbing()) player_class.climb();
 
-        else player_moving();
+        else player_input();
     }
 }

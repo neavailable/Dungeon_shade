@@ -42,7 +42,7 @@ public abstract class Character : Moving_item
 
         if (direction_y == 0) position.x += current_speed * direction_x;
 
-        else position.y += current_speed * direction_y / 2f;
+        else position.y += current_speed * direction_y;
 
         transform.position = position;
 
@@ -62,7 +62,7 @@ public abstract class Character : Moving_item
     {
         get_damage_script.set_pinned_object(this);
 
-        if (current_state != states.is_rolling) current_state = states.is_getting_damage;
+        if (current_state != states.is_rolling) { Debug.Log(100); current_state = states.is_getting_damage; }
     }
 
     public void end_getting_damage() => current_state = states.is_standing;
