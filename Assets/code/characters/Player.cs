@@ -42,6 +42,7 @@ public class Player : Character
         {
             if (direction_y == -1) stand();
         };
+
     }
 
     private void OnDisable()
