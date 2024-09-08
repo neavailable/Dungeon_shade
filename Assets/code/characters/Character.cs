@@ -33,7 +33,7 @@ public abstract class Character : Moving_item
     
     protected override void set_basic_animation()
     {
-        if (current_state != states.is_getting_damage) GetComponent<Animator>().SetInteger("state", (int)current_state);
+        if (current_state != states.is_getting_damage && current_state != states.is_rolling) GetComponent<Animator>().SetInteger("state", (int)current_state);
     }
 
     protected override void move()
